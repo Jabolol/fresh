@@ -60,7 +60,10 @@ async function bootServer(handler: ServeHandler, opts: StartOptions) {
   // @ts-ignore Ignore type error when type checking with Deno versions
   if (typeof Deno.serve === "function") {
     // @ts-ignore Ignore type error when type checking with Deno versions
-    await Deno.serve(opts, handler).finished;
+    await Deno.serve(
+      opts,
+      (req, { remoteAddr }) => handler(req, { remoteAddr }),
+    ).finished;
   } else {
     // @ts-ignore Deprecated std serve way
     await serve(handler, opts);
